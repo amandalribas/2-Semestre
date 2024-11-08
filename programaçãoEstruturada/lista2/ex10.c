@@ -29,4 +29,3 @@ int main(void){
     }while (idade > 0);
     printf("Maior Salario Abaixo de 30 Anos: R$%.2f\nMedia Salarial Feminina: R$%.2f\nMedia Salarial Masculina: R$%.2f", maior, mediaF/iF,mediaM/iM);
     return 0;
-}

@@ -18,4 +18,3 @@ int main(void){
     }
     printf("TOTAL = R$ %d", total);
     return 0;
-}

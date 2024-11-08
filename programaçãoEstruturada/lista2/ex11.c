@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 
 int main(void){
@@ -12,4 +13,3 @@ int main(void){
         a1 += r;
     }
     return 0;
-}
