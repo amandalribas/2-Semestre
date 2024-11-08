@@ -12,11 +12,11 @@ def inicial(pad1,pad2,bola):
 
 
 janela = Window(900, 500)
-background = GameImage("background.png")
+background = GameImage("pongas/background.png")
 #bola = GameImage("bola.png")
-bola = Sprite("ball.png")
-pad1 = GameImage("barra.png")
-pad2 = GameImage("barra.png")
+bola = Sprite("pongas/ball.png")
+pad1 = GameImage("pongas/barra.png")
+pad2 = GameImage("pongas/barra.png")
 gol = False
 
 teclado = Window.get_keyboard()
