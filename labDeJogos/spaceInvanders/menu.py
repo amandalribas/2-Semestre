@@ -14,7 +14,6 @@ def menu():
     sair_buttom = GameImage("buttom/sair.png")
 
     mouse = Window.get_mouse()
-    teclado = Window.get_keyboard()
 
     #posicao Incicial
     iniciar_buttom.set_position(350,150)
