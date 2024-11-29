@@ -3,10 +3,9 @@ from PPlay.keyboard import *
 from PPlay.sprite import *
 from PPlay.gameimage import *
 import menu
+import enemy 
 
-lMonstro = 3
-cMonstro = 7
-velEnemy = 500
+
 def posInicialTiro(player,shots):
     shot = Sprite("images/shot.png")
     shot.x = player.x + player.width/2 - shot.width/2  
@@ -14,49 +13,9 @@ def posInicialTiro(player,shots):
     shots.append(shot)
     return shots
 
-def criaMatriz(matriz):
-    yInicial = 100
-    for i in range(lMonstro):
-        distanciaX = 0
-        xInicial = 200
-        linha = []
-        for j in range (cMonstro):
-            enemy = Sprite("images/enemy1.png")
-            enemy.x = xInicial + distanciaX
-            enemy.y = yInicial + i*150
-            distanciaX += enemy.width + enemy.width/2
-            linha.append(enemy)
-        matriz.append(linha)
-    return matriz
-
-def desenhaMatriz(matriz):
-    for linha in matriz:
-        for sprite in linha:
-            sprite.draw()
-
-def updateMonstro(matriz, janela, velocidade):
-    bateu = False
-    vel = velocidade * janela.delta_time()
-
-    # Verificar colisões e mover os sprites
-    for linha in matriz:
-        for sprite in linha:
-            sprite.x -= (velocidade * janela.delta_time())  # Aplica o movimento
-            if (sprite.x < 10):
-                sprite.x = 10
-                bateu = True
-            elif (sprite.x >= janela.width - sprite.width - sprite.width/2):
-                sprite.x = janela.width - sprite.width - sprite.width/2
-                bateu = True
-
-    # Inverter direção se necessário
-    if bateu:
-        velocidade *= -1
-        for linha in matriz:
-            for sprite in linha:
-                sprite.x -= (velocidade * janela.delta_time())              
 
 def game(dif = 1):
+    
     janela = Window(1200, 744)
     teclado = Window.get_keyboard()
     player = Sprite("images/player.png")
@@ -64,12 +23,22 @@ def game(dif = 1):
     player.y = 644
     vel = 500
     shots = []
+    lMonstro = 3
+    cMonstro = 7
     enemys = []
     contaTiros = 0
-    enemys = criaMatriz(enemys)
+    enemys = enemy.criaMatriz(enemys,lMonstro,cMonstro)
+    velXEnemy = 500
+    velYEnemy = 5
+    fps = 0
     while True:
-        janela.set_background_color([0,0,0])
-
+        
+        janela.set_background_color([0,0,0])            
+        
+        deltatime = janela.delta_time()
+        if (janela.time_elapsed() % 100 == 0) and (deltatime!=0):
+            fps = int(1 /deltatime)
+        janela.draw_text(str(fps),20,20,size=35, color=(255,255,255))
 
         #movendo player
         if (teclado.key_pressed("right") and player.x <= (janela.width - player.width)) or (teclado.key_pressed("left") and player.x >= 0):
@@ -93,12 +62,15 @@ def game(dif = 1):
                 if bala.y < 10:
                     shots.remove(bala)
                     contaTiros -= 1
+        
+        #enemy
+        enemy.desenhaMatriz(enemys)
+        velXEnemy = enemy.updateMonstro(enemys,player,janela,velXEnemy,velYEnemy)   
 
        #volta pro menu         
         if (teclado.key_pressed("esc")):
             menu.menu()
-        updateMonstro(enemys,janela,velEnemy)        
-        desenhaMatriz(enemys)
+        
         player.draw()
         janela.update()
 
