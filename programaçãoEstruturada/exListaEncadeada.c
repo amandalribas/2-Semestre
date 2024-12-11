@@ -45,11 +45,12 @@ void intersecao(lista *lista1, lista *lista2){
         aux = lista2;
         while (aux!=NULL){
             if (lista1->elemento == aux->elemento){
-                printf("%d --", lista1->elemento);
+                printf(" %d\t", lista1->elemento);
                 break;
             }
             aux = aux->prox;
         }
+        lista1 = lista1->prox;
     }   
 }
 
@@ -93,17 +94,4 @@ int main(void){
         printf("%d - ", L->elemento);
         imprimeLista(L->prox);
     }
-}
-
-void intersecao(lista *lista1, lista *lista2){
-    lista *aux;
-    while (lista1 != NULL){
-        if (lista1->elemento){
-            printf("%d --", lista1->elemento);
-            break;
-        }
-        aux = aux->prox;
-    }
-}
-
-*/
+}*/
