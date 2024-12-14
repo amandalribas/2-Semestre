@@ -30,7 +30,7 @@ int buscaBinaria(int elemento, tLista *lista, int *pos){
         posMeio = (posInicio + posFim)/2;
         if (elemento == lista->elementos[posMeio]){
             *pos = posMeio;
-            return 1; //retorna 0 se ja existe;
+            return 1; //retorna 1 se ja existe;
         }
         else{
             if (elemento < lista->elementos[posMeio])
@@ -88,7 +88,6 @@ int main(void){
             printf("\nDIGITE O %do. ELEMENTO:", i+1);
             scanf("%d", &num);
             if (!(insere(num,&lista))){
-                printf("\nNUMERO JA EXISTENTE! Tente Novamente...");
                 i--;
             }
         }
