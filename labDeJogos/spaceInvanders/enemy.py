@@ -2,14 +2,24 @@ from PPlay.window import *
 from PPlay.keyboard import *
 from PPlay.sprite import *
 from PPlay.gameimage import *
+import config
+import random
 
-def criaMatriz(matriz, lMonstro=3, cMonstro=5):
+
+def posInicialTiro(player,shots):
+    shot = Sprite("images/shot.png")
+    shot.x = player.x + player.width/2 - shot.width/2  
+    shot.y = player.y - shot.height             
+    shots.append(shot)
+    return shots
+
+def criaMatriz(matriz):
     yInicial = 100
-    for i in range(lMonstro):
+    for i in range(config.linhaEnemy):
         distanciaX = 0
         xInicial = 200
         linha = []
-        for j in range (cMonstro):
+        for j in range (config.colunaEnemy):
             enemy = Sprite("images/enemy1.png")
             enemy.x = xInicial + distanciaX
             enemy.y = yInicial + i*1.5*enemy.height
@@ -38,7 +48,35 @@ def updateMonstro(matriz, spaceship, janela, speedX,speedY):
         speedX = -speedX
         for l in matriz:
                     for s in l:
-                        if (s.y < spaceship.y - s.height):
                             s.move_y(speedY)
-        
+                            if (s.y > spaceship.y - s.height):
+                                gameover()
     return speedX
+
+def tiroMonstro(matrizEnemy):
+    x = random.randint(0,config.linhaEnemy-1)
+    y = random.randint(0,config.colunaEnemy-1)
+    while (matrizEnemy[x][y]):
+        x = random.randint(0,config.linhaEnemy-1)
+        y = random.randint(0,config.colunaEnemy-1)
+    shots = []
+    shot = Sprite("images/shotE.png")
+    shot.x = matrizEnemy[x][y].x + matrizEnemy[x][y].width/2 - shot.width/2  
+    shot.y = matrizEnemy[x][y].y + matrizEnemy[x][y].height   
+    shots.append(shot)
+    shot.draw()
+    return shots
+        
+    
+
+
+def gameover():
+    janela = Window(1200, 744)
+    teclado = Window.get_keyboard()
+
+    while True:
+        janela.draw_text("GAME-OVER", 415, janela.height/2, size=70, color=(255,0,0), font_name="Arial", bold=False, italic=False)
+        if (teclado.key_pressed("esc")):
+            janela.close()
+
+        janela.update()
