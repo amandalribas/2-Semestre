@@ -61,8 +61,6 @@ int main(void){
     printf("PRINTANDO PILHA:\n"); //ex01 lista5
     printa(&p);
 
-
-
     free(p.elemento);
 
     return 0;

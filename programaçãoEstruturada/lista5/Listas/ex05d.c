@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-//L1 e L2 são simplesmente encadeadas, não circulares e sem nós cabeça
+
+//L1 e L2 são simplesmente encadeadas, não circulares e com nós cabeça;
 #define TAM 10
 
 struct NO{
@@ -10,24 +11,22 @@ struct NO{
 };
 typedef struct NO lista;
 
-lista *concatena(lista *L1, lista *L2){
+lista *concatena(lista *L1, lista * L2){
     lista *aux;
     if (L1 == NULL)
         return L2;
     aux = L1;
-    while (aux->prox != NULL){
+    while (aux->prox != NULL)
         aux = aux->prox;
-    }
-    aux->prox = L2;
+    aux->prox = L2->prox;
     return L1;
 }
 
-//funcoes basicas para testar o funciuonamento:
 int buscaElemento(lista *L, lista **pre, int dado){
-    lista *aux, *preL;
-    preL = NULL;
-    aux = L;
-    while ((aux!=NULL)&&(aux->dado<dado)){
+    lista *preL,*aux;
+    aux = L->prox;
+    preL = L;
+    while ((aux!=NULL)&&(aux->dado < dado)){
         preL = aux;
         aux = aux->prox;
     }
@@ -38,23 +37,18 @@ int buscaElemento(lista *L, lista **pre, int dado){
 }
 
 void insereElemento(lista **L, int dado){
-    lista *aux, *pre;
+    lista *aux,*pre;
     if (!(buscaElemento((*L),&pre,dado))){
         aux = (lista*)malloc(sizeof(lista));
         aux->dado = dado;
-        if (((*L)==NULL)||(pre==NULL)){
-            aux->prox = (*L);
-            (*L) = aux;
-        }else{
-            aux->prox = pre->prox;
-            pre->prox = aux;
-        }
+        aux->prox = pre->prox;
+        pre->prox = aux; 
     }
 }
 
 void print(lista *L){
     lista *aux;
-    aux = L;
+    aux = L->prox;
     while (aux!=NULL){
         printf(" %d \t", aux->dado);
         aux = aux->prox;
@@ -64,21 +58,26 @@ void print(lista *L){
 
 int main(void){
     lista *L1, *L2, *L;
-    int i, n;
-    L1 = NULL;
-    L2 = NULL;
-    L = NULL;
+    int i, num;
+    L1 = (lista*)malloc(sizeof(lista));
+    L2 = (lista*)malloc(sizeof(lista));
+    L = (lista*)malloc(sizeof(lista));
+    L1->prox = NULL;
+    L2->prox = NULL;
+    L->prox = NULL;
     srand(time(NULL));
     for (i=0;i<TAM;i++){
-        n = rand() % 100;
-        insereElemento(&L1, n);
-        n = rand() % 100;
-        insereElemento(&L2,n);
-    } 
+        num = rand()%100;
+        insereElemento(&L1,num);
+        num = rand()%100;
+        insereElemento(&L2,num);
+    }
+    printf("L1: ");
     print(L1);
+    printf("L2: ");
     print(L2);
-    printf("Concatenadas:\n");
     L = concatena(L1,L2);
+    printf("Concatenada: ");
     print(L);
     return 0;
 }
