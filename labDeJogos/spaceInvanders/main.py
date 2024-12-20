@@ -3,4 +3,4 @@ from PPlay.keyboard import *
 import menu
 
 
-menu.menu()
+menu.main()

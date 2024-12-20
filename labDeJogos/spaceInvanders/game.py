@@ -6,37 +6,56 @@ from PPlay.collision import *
 import menu
 import enemy 
 import config
+import utilidades
 
+def limparMatriz(matriz):
+    matriz = [linha for linha in matriz if len(linha) > 0]  
+    return matriz
 
-
-def main(dif = config.dificuldade):
+def main():
     
     janela = Window(1200, 744)
     teclado = Window.get_keyboard()
     player = Sprite("images/player.png")
     player.x = (janela.width)/2 - player.width/2
     player.y = 644
-    vel = 500
+    vel = 1000
     velTEnemy = 300
     shots = []
 
     #enemys = []
     contaTiros = 0
-    #enemys = enemy.criaMatriz(enemys)
-    config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+    
     velXEnemy = 500
     velYEnemy = 15
     #fps = 0
     FPS = 60
     clock = pygame.time.Clock()
-
     shotsEnemys = []
+    balasRemover = []
+    player_invencivel = False  # Indica se o player está invencível
+    tempo_invencibilidade = 2  # Duração da invencibilidade (2 segundos)
 
+    
+    if config.dificuldade == 2:
+        config.colunaEnemy = 6
+    elif config.dificuldade == 3:
+        config.linhaEnemy = 4
+        config.colunaEnemy = 6
+
+    config.matrizEnemy.clear()
+    config.matrizEnemy = limparMatriz(config.matrizEnemy)
+    config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+    inicio = False
     while True:
-        
+        if not(inicio):
+            config.matrizEnemy.clear()
+            config.matrizEnemy = limparMatriz(config.matrizEnemy)
+            config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+            inicio = True
         janela.set_background_color([0,0,0])    
         
-        
+        tempo_atual = pygame.time.get_ticks() / 1000
 
         #fps na tela
         '''deltatime = janela.delta_time()
@@ -68,6 +87,26 @@ def main(dif = config.dificuldade):
     
         enemy.desenhaMatriz(config.matrizEnemy)
 
+        #enemy
+        velXEnemy = enemy.updateMonstro(config.matrizEnemy,player,janela,velXEnemy,velYEnemy)   
+
+        #Tiro Colidindo com o Enemy
+
+        for bala in shots:
+            for linha in config.matrizEnemy:
+                for inimigo in linha:
+                    if (Collision.collided(bala,inimigo)):
+                        balasRemover.append(bala)
+                        linha.remove(inimigo)
+                        config.pontos += 10
+                        player_invencivel = True   
+                        tempo_inicio_invencibilidade = pygame.time.get_ticks() / 1000
+        
+        for bala in balasRemover:
+            if bala in shots:
+                shots.remove(bala)
+                contaTiros -= 1
+        
         if len(shots) > 0: #se atirou
             for bala in shots:
                 bala.draw()
@@ -77,23 +116,9 @@ def main(dif = config.dificuldade):
                     shots.remove(bala)
                     contaTiros -= 1
 
-        #enemy
-        velXEnemy = enemy.updateMonstro(config.matrizEnemy,player,janela,velXEnemy,velYEnemy)   
-
-        #Tiro Colidindo com o Enemy
-        for bala in shots:
-            for linha in config.matrizEnemy:
-                for inimigo in linha:
-                    if (Collision.collided_perfect(bala,inimigo)): 
-                        linha.remove(inimigo)
-                        shots.remove(bala)
-                        contaTiros -= 1
-                        config.pontos += 10   
-   
-                        
-        #Tiro Enemy
-        if (len(shotsEnemys) ==0):
-            shotsEnemys = enemy.tiroMonstro(config.matrizEnemy)
+         #Tiro Enemy
+        if (len(shotsEnemys) == 0):
+            shotsEnemys = enemy.tiroMonstro(config.matrizEnemy,shotsEnemys)
         else:
             for shot in shotsEnemys:
                 shot.y += velTEnemy * janela.delta_time()
@@ -103,14 +128,28 @@ def main(dif = config.dificuldade):
                 elif shot.y > player.y:
                     shotsEnemys.remove(shot)
                 shot.draw()
-
-
-
+        for shot in shotsEnemys:
+            shot.draw()
+      
+        #invencibilidade do player apos colisao com o tiro
+        if player_invencivel and (tempo_atual - tempo_inicio_invencibilidade > tempo_invencibilidade):
+            player_invencivel = False
+        
        #volta pro menu         
         if (teclado.key_pressed("esc")):
-            menu.menu()
-
+            menu.main()
+        if config.vidas == 0:
+            utilidades.gameover()
+        
+        config.matrizEnemy = limparMatriz(config.matrizEnemy)
+        if len(config.matrizEnemy) == 0:
+            config.matrizEnemy.clear()
+            config.matrizEnemy = limparMatriz(config.matrizEnemy)
+            config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+            velYEnemy += 1
+            velXEnemy += 5
         player.draw()
         janela.update()
+        
+        
 
-main()

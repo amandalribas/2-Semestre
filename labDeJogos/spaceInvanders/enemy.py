@@ -4,6 +4,7 @@ from PPlay.sprite import *
 from PPlay.gameimage import *
 import config
 import random
+import utilidades
 
 
 def posInicialTiro(player,shots):
@@ -22,8 +23,8 @@ def criaMatriz(matriz):
         for j in range (config.colunaEnemy):
             enemy = Sprite("images/enemy1.png")
             enemy.x = xInicial + distanciaX
-            enemy.y = yInicial + i*1.5*enemy.height
-            distanciaX += enemy.width + enemy.width/2
+            enemy.y = yInicial + i*(1.5) *enemy.height
+            distanciaX += 30 + enemy.width + enemy.width/2
             linha.append(enemy)
         matriz.append(linha)
     return matriz
@@ -50,33 +51,27 @@ def updateMonstro(matriz, spaceship, janela, speedX,speedY):
                     for s in l:
                             s.move_y(speedY)
                             if (s.y > spaceship.y - s.height):
-                                gameover()
+                                utilidades.gameover()
     return speedX
 
-def tiroMonstro(matrizEnemy):
-    x = random.randint(0,config.linhaEnemy-1)
-    y = random.randint(0,config.colunaEnemy-1)
-    while (matrizEnemy[x][y]):
-        x = random.randint(0,config.linhaEnemy-1)
-        y = random.randint(0,config.colunaEnemy-1)
-    shots = []
+    
+def tiroMonstro(matrizEnemy, shots):
+    if not matrizEnemy:  # Verifica se ainda existe inimigo
+        return shots
+    
+    # Sorteia uma linha que ainda tenha inimigos
+    linhas_validas = [linha for linha in matrizEnemy if len(linha) > 0]
+    if not linhas_validas:
+        return shots
+
+    linha = random.choice(linhas_validas)  # Escolhe uma linha aleatória com inimigos
+    inimigo = random.choice(linha)  # Escolhe um inimigo da linha
+    
     shot = Sprite("images/shotE.png")
-    shot.x = matrizEnemy[x][y].x + matrizEnemy[x][y].width/2 - shot.width/2  
-    shot.y = matrizEnemy[x][y].y + matrizEnemy[x][y].height   
+    shot.x = inimigo.x + inimigo.width / 2 - shot.width / 2  
+    shot.y = inimigo.y + inimigo.height   
     shots.append(shot)
-    shot.draw()
     return shots
-        
     
 
 
-def gameover():
-    janela = Window(1200, 744)
-    teclado = Window.get_keyboard()
-
-    while True:
-        janela.draw_text("GAME-OVER", 415, janela.height/2, size=70, color=(255,0,0), font_name="Arial", bold=False, italic=False)
-        if (teclado.key_pressed("esc")):
-            janela.close()
-
-        janela.update()
