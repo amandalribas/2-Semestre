@@ -8,6 +8,8 @@ import enemy
 import config
 import utilidades
 
+
+
 def limparMatriz(matriz):
     matriz = [linha for linha in matriz if len(linha) > 0]  
     return matriz
@@ -46,6 +48,9 @@ def main():
     config.matrizEnemy.clear()
     config.matrizEnemy = limparMatriz(config.matrizEnemy)
     config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+    #config.matrizEnemy = inicializar_jogo()
+
+    colidiu = False
     inicio = False
     while True:
         if not(inicio):
@@ -91,50 +96,67 @@ def main():
         velXEnemy = enemy.updateMonstro(config.matrizEnemy,player,janela,velXEnemy,velYEnemy)   
 
         #Tiro Colidindo com o Enemy
-
-        for bala in shots:
-            for linha in config.matrizEnemy:
-                for inimigo in linha:
-                    if (Collision.collided(bala,inimigo)):
-                        balasRemover.append(bala)
-                        linha.remove(inimigo)
-                        config.pontos += 10
-                        player_invencivel = True   
-                        tempo_inicio_invencibilidade = pygame.time.get_ticks() / 1000
-        
-        for bala in balasRemover:
-            if bala in shots:
-                shots.remove(bala)
-                contaTiros -= 1
-        
-        if len(shots) > 0: #se atirou
+        if not(colidiu):
             for bala in shots:
-                bala.draw()
-                if bala.y > 0:
-                    bala.y -= vel * janela.delta_time()
-                if bala.y < 10:
+                for linha in config.matrizEnemy:
+                    for inimigo in linha:
+                        if (Collision.collided(bala,inimigo)):
+                            balasRemover.append(bala)
+                            linha.remove(inimigo)
+                            config.pontos += 10
+                            player_invencivel = True   
+                            tempo_inicio_invencibilidade = pygame.time.get_ticks() / 1000
+            
+            for bala in balasRemover:
+                if bala in shots:
                     shots.remove(bala)
                     contaTiros -= 1
+        
+            if len(shots) > 0: #se atirou
+                for bala in shots:
+                    bala.draw()
+                    if bala.y > 0:
+                        bala.y -= vel * janela.delta_time()
+                    if bala.y < 10:
+                        shots.remove(bala)
+                        contaTiros -= 1
 
          #Tiro Enemy
-        if (len(shotsEnemys) == 0):
-            shotsEnemys = enemy.tiroMonstro(config.matrizEnemy,shotsEnemys)
-        else:
+        if not(colidiu):
+            if (len(shotsEnemys) == 0):
+                shotsEnemys = enemy.tiroMonstro(config.matrizEnemy,shotsEnemys)
+            else:
+                for shot in shotsEnemys:
+                    shot.y += velTEnemy * janela.delta_time()
+                    if (Collision.collided_perfect(shot,player)):
+                        config.vidas -= 1
+                        shotsEnemys.remove(shot)
+                        colidiu = True
+                        tempoPisca = janela.time_elapsed()
+                        fimTempoPisca = tempoPisca + 1500
+                        posX = player.x
+                        posY = player.y
+                    elif shot.y > player.y:
+                        shotsEnemys.remove(shot)
+                    shot.draw()
             for shot in shotsEnemys:
-                shot.y += velTEnemy * janela.delta_time()
-                if (Collision.collided_perfect(shot,player)):
-                    config.vidas -= 1
-                    shotsEnemys.remove(shot)
-                elif shot.y > player.y:
-                    shotsEnemys.remove(shot)
                 shot.draw()
-        for shot in shotsEnemys:
-            shot.draw()
-      
+        #PISCANDO
+        
+        tempoPisca = janela.time_elapsed()
+        #(tempoPisca)
+        if colidiu:
+            if tempoPisca % 5 == 0:
+                player.set_position(-500,-500)
+            else:
+                player.set_position(posX,posY)
+            if tempoPisca >= fimTempoPisca:
+                colidiu = False
+
         #invencibilidade do player apos colisao com o tiro
         if player_invencivel and (tempo_atual - tempo_inicio_invencibilidade > tempo_invencibilidade):
             player_invencivel = False
-        
+
        #volta pro menu         
         if (teclado.key_pressed("esc")):
             menu.main()
@@ -153,3 +175,4 @@ def main():
         
         
 
+main()

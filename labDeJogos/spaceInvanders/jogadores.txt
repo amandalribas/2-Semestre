@@ -1,7 +1,31 @@
 Marcela 560 20/12/2024
 alicinha 530 20/12/2024
 Juninho 500 20/12/2024
+Amanda 400 9/1/2025
 Julia 300 20/12/2024
 Amanda 260 20/12/2024
 Pedro 150 20/12/2024
 Joao 100 20/12/2024
+a 0 9/1/2025
+1 0 9/1/2025
+. 240 9/1/2025
+. 130 9/1/2025
+. 0 9/1/2025
+& D:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/venv/Scripts/python.exe d:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/game.py 0 9/1/2025
+& D:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/venv/Scripts/python.exe d:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/game.py 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+& D:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/venv/Scripts/python.exe d:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/game.py 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+. 0 9/1/2025
+& D:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/venv/Scripts/python.exe d:/uffCodes/2-Semestre/labDeJogos/spaceInvanders/game.py 0 9/1/2025
+. 50 9/1/2025
+. 20 9/1/2025
+. 110 9/1/2025
+. 0 9/1/2025
+. 440 9/1/2025

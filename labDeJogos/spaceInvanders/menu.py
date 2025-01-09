@@ -6,6 +6,16 @@ import game
 import config
 import utilidades
 
+def inicializar_jogo():
+    config.pontos = 0
+    config.vidas = 3
+    config.matrizEnemy = limparMatriz(config.matrizEnemy)
+    config.matrizEnemy = enemy.criaMatriz(config.matrizEnemy)
+    config.linhaEnemy = 5  # ou o valor padrão desejado
+    config.colunaEnemy = 6  # ou o valor padrão desejado
+    return config.matrizEnemy
+    
+
 def main():
     janela = Window(1200, 744)
     background = GameImage("images/background.png")
@@ -26,6 +36,8 @@ def main():
     while True:
         janela.set_title("MENU")
         if (mouse.is_over_area([350,100], [800,200])) and mouse.is_button_pressed(1): #
+            config.linhaEnemy = 3
+            config.colunaEnemy = 5
             game.main()
         if(mouse.is_over_area([350,270], [800,370])) and mouse.is_button_pressed(1): #dificuldade
             menuDif()
